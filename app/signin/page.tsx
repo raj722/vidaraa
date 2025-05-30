@@ -21,7 +21,7 @@ export default function SigninPage() {
             <img src="/logo.jpg" alt="Logo" className="h-12 w-12 drop-shadow-lg rounded-full" />
           </div>
           <img
-            src="/4.jpg"
+            src="/5.jpg"
             alt="Signin Visual"
             className="w-full h-full object-cover"
           />
