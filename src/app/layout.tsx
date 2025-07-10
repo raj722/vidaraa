@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={poppins.variable}>
-      <body className="antialiased font-sans bg-background text-foreground">
+    <html lang="en">
+      <body className={`${poppins.className} antialiased`}>
         <CustomSessionProvider>{children}</CustomSessionProvider>
       </body>
     </html>
