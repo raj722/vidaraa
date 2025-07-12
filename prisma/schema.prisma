@@ -16,18 +16,35 @@ model Course {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  instructor  User     @relation(fields: [instructorId], references: [id])
-  instructorId String  @db.ObjectId
+  instructor   User   @relation(fields: [instructorId], references: [id])
+  instructorId String @db.ObjectId
+
+  enrollments Enrollment[]
 }
 
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-  email    String   @unique
+  email    String @unique
   password String
   role     String
 
-  courses  Course[]
+  courses     Course[]
+  enrollments Enrollment[]
+}
+
+model Enrollment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId String @db.ObjectId
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+
+  @@unique([studentId, courseId])
 }
 
 enum Role {
