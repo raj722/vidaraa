@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
-import { signIn } from 'next-auth/react'
+import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Loader2 } from 'lucide-react' // built-in icon from shadcn
+import { Loader2 } from 'lucide-react'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -31,7 +31,17 @@ export default function SignInPage() {
     })
 
     if (res?.ok) {
-      router.push('/dashboard')
+      const session = await getSession()
+
+      const role = session?.user?.role
+
+      if (role === 'INSTRUCTOR') {
+        router.push('/instructor-dashboard')
+      } else if (role === 'STUDENT') {
+        router.push('/student-dashboard')
+      } else {
+        router.push('/dashboard') // fallback
+      }
     } else {
       setError('Invalid credentials')
       setLoading(false)
