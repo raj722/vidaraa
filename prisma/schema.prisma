@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  thumbnail   String
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  instructor   User   @relation(fields: [instructorId], references: [id])
+  instructorId String @db.ObjectId
+
+  enrollments Enrollment[]
+}
+
+model User {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
+  password String
+  role     String
+
+  courses     Course[]
+  enrollments Enrollment[]
+  routines    Routine[] // ✅ Added this line
+}
+
+model Enrollment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId String @db.ObjectId
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+
+  @@unique([studentId, courseId])
+}
+
+model Routine {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  time        String
+  duration    String
+  status      String
+  color       String
+  tasks       String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId String @db.ObjectId
+}
+
+model Mindmap {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  course        String?
+  lastModified  DateTime
+  nodes         Int
+  connections   Int
+  status        String
+  thumbnail     String?
+  jsonData      Json
+  studentId     String
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+}
